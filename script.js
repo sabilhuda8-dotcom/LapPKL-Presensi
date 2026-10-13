@@ -230,7 +230,8 @@ function applyTheme(isDark) {
   }
 
   document.querySelectorAll('.theme-icon').forEach(el => {
-    el.textContent = isDark ? '☀️' : '🌙';
+    el.innerHTML = isDark ? '<i data-lucide="sun" class="w-4 h-4"></i>' : '<i data-lucide="moon" class="w-4 h-4"></i>';
+    if(window.lucide) lucide.createIcons({nodes: [el]});
   });
   document.querySelectorAll('.theme-text').forEach(el => {
     el.textContent = isDark ? 'Mode Terang' : 'Mode Gelap';
@@ -274,7 +275,7 @@ function showToast(message, type = 'success') {
         ? 'bg-rose-600 text-white'
         : 'bg-slate-800 dark:bg-slate-700 text-white'
     }`;
-    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+    const icon = type === 'success' ? '<i data-lucide="check-circle" class="w-3 h-3 inline text-emerald-600"></i>' : type === 'error' ? '<i data-lucide="x-circle" class="w-3 h-3 inline text-red-500"></i>' : 'ℹ️';
     toast.innerHTML = `<span class="text-base">${icon}</span><span>${message}</span>`;
     container.appendChild(toast);
 
@@ -292,8 +293,8 @@ function showToast(message, type = 'success') {
 
   if ('Notification' in window && Notification.permission === 'granted') {
     let title = 'Laporan & Absensi Praktik';
-    if (type === 'success') title = '✅ ' + title;
-    else if (type === 'error') title = '❌ ' + title;
+    if (type === 'success') title = '<i data-lucide="check-circle" class="w-3 h-3 inline text-emerald-600"></i> ' + title;
+    else if (type === 'error') title = '<i data-lucide="x-circle" class="w-3 h-3 inline text-red-500"></i> ' + title;
     else title = 'ℹ️ ' + title;
 
     new Notification(title, { body: message });
@@ -447,13 +448,13 @@ function evaluateSelectedTaskDate(dateVal) {
   const todayStr = getLocalDateString(new Date());
   if (dateVal < todayStr) {
     taskBackfillNotice.className = 'mt-2 text-xs flex items-center gap-1.5 p-2 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800 font-semibold';
-    taskBackfillText.textContent = `🕒 Mode Susulan: Mencatat pekerjaan untuk tanggal yang lalu (${formatDayDate(dateVal)}). Tetap tersimpan rapi!`;
+    taskBackfillText.textContent = `Mode Susulan: Mencatat pekerjaan untuk tanggal yang lalu (${formatDayDate(dateVal)}). Tetap tersimpan rapi!`;
   } else if (dateVal === todayStr) {
     taskBackfillNotice.className = 'mt-2 text-xs flex items-center gap-1.5 p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300';
-    taskBackfillText.textContent = '🟢 Mencatat pekerjaan hari ini';
+    taskBackfillText.textContent = '<i data-lucide="circle" class="w-3 h-3 inline text-emerald-500 fill-emerald-500"></i> Mencatat pekerjaan hari ini';
   } else {
     taskBackfillNotice.className = 'mt-2 text-xs flex items-center gap-1.5 p-2 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-800';
-    taskBackfillText.textContent = `📅 Jadwal mendatang: ${formatDayDate(dateVal)}`;
+    taskBackfillText.textContent = `<i data-lucide="calendar" class="w-3 h-3 inline"></i> Jadwal mendatang: ${formatDayDate(dateVal)}`;
   }
 }
 
@@ -467,23 +468,23 @@ function evaluateSelectedAttendanceDate(dateVal) {
 
   if (info.isHoliday) {
     dateStatusNotice.className = 'mt-2 text-xs flex items-center gap-1.5 p-2.5 rounded-xl bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-200 border border-rose-200 dark:border-rose-900 font-semibold';
-    dateStatusText.textContent = `🔴 Tanggal Merah Libur Nasional: ${info.holidayName}${pastTag}`;
+    dateStatusText.textContent = `Libur Nasional: ${info.holidayName}${pastTag}`;
     if (holidayInfoBadge) {
       holidayInfoBadge.className = 'flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-200 border border-rose-300';
-      holidayInfoBadge.innerHTML = `<span>🎌</span><span>${info.holidayName}</span>`;
+      holidayInfoBadge.innerHTML = `<span><i data-lucide="flag" class="w-3 h-3 inline"></i></span><span>${info.holidayName}</span>`;
       holidayInfoBadge.classList.remove('hidden');
     }
   } else if (info.isWeekend) {
     dateStatusNotice.className = 'mt-2 text-xs flex items-center gap-1.5 p-2.5 rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-900 font-semibold';
-    dateStatusText.textContent = `🟡 Akhir Pekan (${info.dayName}) - Jadwal PKL Libur${pastTag}`;
+    dateStatusText.textContent = `Akhir Pekan (${info.dayName}) - Jadwal PKL Libur${pastTag}`;
     if (holidayInfoBadge) holidayInfoBadge.classList.add('hidden');
   } else {
     dateStatusNotice.className = isPast
       ? 'mt-2 text-xs flex items-center gap-1.5 p-2 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800 font-semibold'
       : 'mt-2 text-xs flex items-center gap-1.5 p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-900 font-semibold';
     dateStatusText.textContent = isPast
-      ? `🕒 Input Susulan: Mengisi presensi untuk hari yang telah lewat (${info.dayName}, ${formatDayDate(dateVal)}). Tetap tercatat resmi!`
-      : `🟢 Hari Kerja PKL (${info.dayName}, 08:00 – 16:00 WIB)`;
+      ? `Input Susulan: Mengisi presensi untuk hari yang telah lewat (${info.dayName}, ${formatDayDate(dateVal)}). Tetap tercatat resmi!`
+      : `<i data-lucide="circle" class="w-3 h-3 inline text-emerald-500 fill-emerald-500"></i> Hari Kerja PKL (${info.dayName}, 08:00 – 16:00 WIB)`;
     if (holidayInfoBadge) holidayInfoBadge.classList.add('hidden');
   }
 
@@ -545,7 +546,7 @@ function getCurrentUser() {
 
 function updateAdminFilterDropdowns() {
   const allUsers = getAllUsers().filter(u => u.role !== 'admin');
-  const userOptions = '<option value="ALL">🌐 Semua Siswa PKL</option>' +
+  const userOptions = '<option value="ALL"><i data-lucide="globe" class="w-3 h-3 inline"></i> Semua Siswa PKL</option>' +
     allUsers.map(u => `<option value="${u.email}">${u.name} (${u.nis || '-'})</option>`).join('');
 
   if (adminTaskUserFilter) {
@@ -585,7 +586,7 @@ function updateAdminFilterDropdowns() {
   const ticketAssignee = document.getElementById('ticket-input-assignee');
   if (ticketAssignee) {
     const currentVal = ticketAssignee.value || '';
-    ticketAssignee.innerHTML = '<option value="">🌐 Terbuka (Siapa saja boleh ambil)</option>' +
+    ticketAssignee.innerHTML = '<option value=""><i data-lucide="globe" class="w-3 h-3 inline"></i> Terbuka (Siapa saja boleh ambil)</option>' +
       allUsers.map(s => `<option value="${s.email}">${s.name} (${s.nis || '-'})</option>`).join('');
     if ([...ticketAssignee.options].some(o => o.value === currentVal)) {
       ticketAssignee.value = currentVal;
@@ -823,21 +824,21 @@ function updateIdentity() {
   identityNis.textContent = user?.nis || '-';
   identityName.textContent = user?.name || '-';
   identityEmail.textContent = user?.email || '-';
-  welcomeText.textContent = user ? `👋 Hai, ${user.name}!` : 'Selamat datang!';
+  welcomeText.textContent = user ? ` Hai, ${user.name}!` : 'Selamat datang!';
 
   const isAdmin = user?.role === 'admin';
   if (userRoleBadge) {
     if (isAdmin) {
       userRoleBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400/30 text-amber-100 border border-amber-300/40 backdrop-blur';
-      userRoleBadge.innerHTML = '<span>👑</span><span>Admin PKL</span>';
+      userRoleBadge.innerHTML = '<span><i data-lucide="crown" class="w-3 h-3 inline text-amber-400"></i></span><span>Admin PKL</span>';
     } else {
       userRoleBadge.className = 'hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-white/20 backdrop-blur border border-white/30 text-white';
-      userRoleBadge.innerHTML = '<span>👨‍🎓</span><span>Siswa</span>';
+      userRoleBadge.innerHTML = '<span><i data-lucide="graduation-cap" class="w-3 h-3 inline"></i></span><span>Siswa</span>';
     }
   }
 
   if (userRoleSubtext) {
-    userRoleSubtext.textContent = isAdmin ? '👑 Administrator / Pembimbing' : '👨‍🎓 Siswa Praktik Terdaftar';
+    userRoleSubtext.textContent = isAdmin ? '<i data-lucide="crown" class="w-3 h-3 inline text-amber-400"></i> Administrator / Pembimbing' : '<i data-lucide="graduation-cap" class="w-3 h-3 inline"></i> Siswa Praktik Terdaftar';
   }
 
   // Toggle navigation groups based strictly on role
@@ -954,7 +955,7 @@ function openCreateTicketModal(editId = null) {
   // Populate assignee options from students list
   if (assigneeInput) {
     const students = getAllUsers().filter(u => u.role !== 'admin');
-    assigneeInput.innerHTML = '<option value="">🌐 Terbuka (Siapa saja boleh ambil)</option>' +
+    assigneeInput.innerHTML = '<option value=""><i data-lucide="globe" class="w-3 h-3 inline"></i> Terbuka (Siapa saja boleh ambil)</option>' +
       students.map(s => `<option value="${s.email}">${s.name} (${s.nis || '-'})</option>`).join('');
   }
 
@@ -962,7 +963,7 @@ function openCreateTicketModal(editId = null) {
     const tickets = getTickets();
     const ticket = tickets.find(t => t.id === editId);
     if (ticket) {
-      titleEl.innerHTML = '<span>✏️</span><span>Edit Tiket Tugas</span>';
+      titleEl.innerHTML = '<span><i data-lucide="pencil" class="w-3 h-3 inline"></i></span><span>Edit Tiket Tugas</span>';
       editIdInput.value = ticket.id;
       titleInput.value = ticket.title || '';
       catInput.value = ticket.category || 'Jaringan / Hardware';
@@ -972,7 +973,7 @@ function openCreateTicketModal(editId = null) {
       descInput.value = ticket.description || '';
     }
   } else {
-    titleEl.innerHTML = '<span>➕</span><span>Buat Tiket Tugas Baru</span>';
+    titleEl.innerHTML = '<span><i data-lucide="plus" class="w-3 h-3 inline"></i></span><span>Buat Tiket Tugas Baru</span>';
     editIdInput.value = '';
     titleInput.value = '';
     catInput.selectedIndex = 0;
@@ -1111,7 +1112,7 @@ function claimTicket(ticketId) {
 
   setTickets(tickets);
   renderStudentTickets();
-  showToast(`Tugas "${ticket.title}" berhasil Anda ambil! Segera kerjakan ya 👍`, 'success');
+  showToast(`Tugas "${ticket.title}" berhasil Anda ambil! Segera kerjakan!`, 'success');
 }
 window.claimTicket = claimTicket;
 
@@ -1216,9 +1217,9 @@ function renderAdminTickets() {
   if (!filtered.length) {
     container.innerHTML = `
       <div class="sm:col-span-2 p-8 rounded-3xl bg-slate-50 dark:bg-slate-850 text-center border border-dashed border-slate-300 dark:border-slate-700">
-        <p class="text-3xl mb-2">🎫</p>
+        <p class="text-3xl mb-2"><i data-lucide="ticket" class="w-8 h-8 inline text-indigo-400"></i></p>
         <p class="font-bold text-slate-700 dark:text-slate-300">Tidak ada tiket pada kategori ini</p>
-        <button type="button" onclick="openCreateTicketModal()" class="mt-3 px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700">➕ Buat Tiket Sekarang</button>
+        <button type="button" onclick="openCreateTicketModal()" class="mt-3 px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700"><i data-lucide="plus" class="w-4 h-4 inline"></i> Buat Tiket</button>
       </div>`;
     return;
   }
@@ -1226,22 +1227,22 @@ function renderAdminTickets() {
   container.innerHTML = filtered.map(t => {
     let priorityBadge = '';
     if (t.priority === 'Urgent') {
-      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-300">🔴 Urgent</span>';
+      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-300"><i data-lucide="circle" class="w-3 h-3 inline text-rose-500 fill-rose-500"></i> Urgent</span>';
     } else if (t.priority === 'Tinggi') {
-      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 border border-amber-300">🟠 Tinggi</span>';
+      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 border border-amber-300"><i data-lucide="circle" class="w-3 h-3 inline text-amber-500 fill-amber-500"></i> Tinggi</span>';
     } else if (t.priority === 'Sedang') {
-      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-300">🟡 Sedang</span>';
+      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-300"><i data-lucide="circle" class="w-3 h-3 inline text-blue-400 fill-blue-400"></i> Sedang</span>';
     } else {
-      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300">🟢 Rendah</span>';
+      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300"><i data-lucide="circle" class="w-3 h-3 inline text-emerald-500 fill-emerald-500"></i> Rendah</span>';
     }
 
     let statusBadge = '';
     if (t.status === 'OPEN') {
-      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">🟢 Tersedia (Open)</span>';
+      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200"><i data-lucide="circle" class="w-3 h-3 inline text-emerald-500 fill-emerald-500"></i> Tersedia</span>';
     } else if (t.status === 'IN_PROGRESS') {
-      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800 border border-indigo-200">⏳ Sedang Dikerjakan</span>';
+      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800 border border-indigo-200"><i data-lucide="hourglass" class="w-3 h-3 inline"></i> Dikerjakan</span>';
     } else {
-      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-200 text-slate-800 border border-slate-300">✅ Selesai</span>';
+      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-200 text-slate-800 border border-slate-300"><i data-lucide="check-circle" class="w-3 h-3 inline text-emerald-600"></i> Selesai</span>';
     }
 
     let assigneeInfo = '';
@@ -1249,7 +1250,7 @@ function renderAdminTickets() {
       assigneeInfo = `
         <div class="mt-3 p-2.5 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-xs">
           <p class="font-bold text-indigo-900 dark:text-indigo-200 flex items-center gap-1.5">
-            <span>👤 Dikerjakan oleh:</span>
+            <span><i data-lucide="user" class="w-3 h-3 inline"></i> Dikerjakan oleh:</span>
             <span>${t.assignedToName} (${t.assignedToNis || '-'})</span>
           </p>
           ${t.completionNotes ? `<p class="mt-1 text-slate-600 dark:text-slate-300 whitespace-pre-wrap"><span class="font-bold">Hasil:</span> ${t.completionNotes}</p>` : ''}
@@ -1264,20 +1265,21 @@ function renderAdminTickets() {
             <div class="flex items-center gap-1.5">${priorityBadge}</div>
           </div>
           <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">${t.title}</h4>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">📅 Target Deadline: <strong>${formatDayDate(t.deadline)}</strong></p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1"><i data-lucide="calendar" class="w-3 h-3 inline"></i> Target Deadline: <strong>${formatDayDate(t.deadline)}</strong></p>
           <p class="mt-2.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl border border-slate-100 dark:border-slate-750">${t.description && t.description.length > 120 ? t.description.slice(0, 120) + "..." : t.description}</p>
           ${assigneeInfo}
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
           <div>${statusBadge}</div>
           <div class="flex items-center gap-1.5">
-            <button type="button" onclick="openCreateTicketModal('${t.id}')" class="px-2.5 py-1.5 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-200">✏️ Edit</button>
-            <button type="button" onclick="deleteTicket('${t.id}')" class="px-2.5 py-1.5 rounded-xl bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-300 font-bold text-xs hover:bg-red-200">🗑️</button>
+            <button type="button" onclick="openCreateTicketModal('${t.id}')" class="px-2.5 py-1.5 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-200"><i data-lucide="pencil" class="w-3 h-3 inline"></i> Edit</button>
+            <button type="button" onclick="deleteTicket('${t.id}')" class="px-2.5 py-1.5 rounded-xl bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-300 font-bold text-xs hover:bg-red-200"><i data-lucide="trash-2" class="w-3 h-3 inline"></i></button>
           </div>
         </div>
       </div>
     `;
-  }).join('');
+  }}).join('');
+  refreshIcons();
 }
 
 function renderStudentTickets() {
@@ -1307,7 +1309,7 @@ function renderStudentTickets() {
   if (!filtered.length) {
     container.innerHTML = `
       <div class="sm:col-span-2 p-8 rounded-3xl bg-slate-50 dark:bg-slate-850 text-center border border-dashed border-slate-300 dark:border-slate-700">
-        <p class="text-3xl mb-2">🎉</p>
+        <p class="text-3xl mb-2"><i data-lucide="check-circle" class="w-8 h-8 inline text-emerald-500"></i></p>
         <p class="font-bold text-slate-700 dark:text-slate-300">Tidak ada tiket tugas pada kategori ini</p>
         <p class="text-xs text-slate-400 mt-1">Silakan cek berkala tugas yang diberikan pembimbing.</p>
       </div>`;
@@ -1317,22 +1319,22 @@ function renderStudentTickets() {
   container.innerHTML = filtered.map(t => {
     let priorityBadge = '';
     if (t.priority === 'Urgent') {
-      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-300">🔴 Urgent</span>';
+      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-300"><i data-lucide="circle" class="w-3 h-3 inline text-rose-500 fill-rose-500"></i> Urgent</span>';
     } else if (t.priority === 'Tinggi') {
-      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 border border-amber-300">🟠 Tinggi</span>';
+      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 border border-amber-300"><i data-lucide="circle" class="w-3 h-3 inline text-amber-500 fill-amber-500"></i> Tinggi</span>';
     } else {
-      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-300">🟡 Normal</span>';
+      priorityBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-300"><i data-lucide="circle" class="w-3 h-3 inline text-blue-400 fill-blue-400"></i> Normal</span>';
     }
 
     let actionBtn = '';
     if (t.status === 'OPEN') {
-      actionBtn = `<button type="button" onclick="claimTicket('${t.id}')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition">✋ Ambil Tugas Ini</button>`;
+      actionBtn = `<button type="button" onclick="claimTicket('${t.id}')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition"><i data-lucide="hand" class="w-4 h-4 inline"></i> Ambil Tugas</button>`;
     } else if (t.status === 'IN_PROGRESS' && t.assignedToEmail === myEmail) {
-      actionBtn = `<button type="button" onclick="openCompleteTicketModal('${t.id}')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition">✅ Selesaikan Tugas</button>`;
+      actionBtn = `<button type="button" onclick="openCompleteTicketModal('${t.id}')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition"><i data-lucide="check-circle" class="w-3 h-3 inline text-emerald-600"></i> Selesaikan Tugas</button>`;
     } else if (t.status === 'IN_PROGRESS') {
-      actionBtn = `<span class="text-xs font-semibold text-slate-400">⏳ Sedang dikerjakan: ${t.assignedToName}</span>`;
+      actionBtn = `<span class="text-xs font-semibold text-slate-400"><i data-lucide="hourglass" class="w-3 h-3 inline"></i> Dikerjakan: ${t.assignedToName}</span>`;
     } else {
-      actionBtn = `<span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">✅ Tugas Selesai</span>`;
+      actionBtn = `<span class="text-xs font-bold text-emerald-600 dark:text-emerald-400"><i data-lucide="check-circle" class="w-3 h-3 inline text-emerald-600"></i> Tugas Selesai</span>`;
     }
 
     return `
@@ -1343,7 +1345,7 @@ function renderStudentTickets() {
             ${priorityBadge}
           </div>
           <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">${t.title}</h4>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">📅 Target: <strong>${formatDayDate(t.deadline)}</strong></p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1"><i data-lucide="calendar" class="w-3 h-3 inline"></i> Target: <strong>${formatDayDate(t.deadline)}</strong></p>
           <p class="mt-2.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl border border-slate-100 dark:border-slate-750">${t.description && t.description.length > 120 ? t.description.slice(0, 120) + "..." : t.description}</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
@@ -1352,9 +1354,10 @@ function renderStudentTickets() {
         </div>
       </div>
     `;
-  }).join('');
-}
+  })).join('');
+  if(window.lucide) lucide.createIcons();
 
+}
 // ==================== ADMIN DASHBOARD ====================
 function renderAdminDashboard() {
   const allUsers = getAllUsers().filter(u => u.role !== 'admin');
@@ -1387,13 +1390,14 @@ function renderAdminDashboard() {
             <td class="p-3 text-center"><span class="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300">${studentAttCount}</span></td>
             <td class="p-3 text-center whitespace-nowrap">
               <div class="flex items-center justify-center gap-1.5">
-                <button onclick="viewStudentAttendance('${u.email}')" class="px-2 py-1 rounded-xl bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 text-xs font-bold">📊 Absen</button>
-                <button onclick="viewStudentTasks('${u.email}')" class="px-2 py-1 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 hover:bg-blue-200 text-xs font-bold">📝 Jurnal</button>
+                <button onclick="viewStudentAttendance('${u.email}')" class="px-2 py-1 rounded-xl bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 text-xs font-bold">Absen</button>
+                <button onclick="viewStudentTasks('${u.email}')" class="px-2 py-1 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 hover:bg-blue-200 text-xs font-bold">Jurnal</button>
               </div>
             </td>
           </tr>
         `;
-      }).join('');
+      }}).join('');
+  refreshIcons();
     }
   }
 
@@ -1404,7 +1408,7 @@ function renderAdminDashboard() {
     if (!activeList.length) {
       recentTicketsContainer.innerHTML = `
         <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 text-center border border-dashed border-slate-300 dark:border-slate-700">
-          <p class="text-xl mb-1">🎉</p>
+          <p class="text-xl mb-1"><i data-lucide="check-circle" class="w-8 h-8 inline text-emerald-500"></i></p>
           <p class="text-xs font-bold text-slate-600 dark:text-slate-300">Semua tiket tugas telah selesai</p>
         </div>`;
     } else {
@@ -1413,7 +1417,7 @@ function renderAdminDashboard() {
           <div>
             <span class="text-[10px] font-bold px-2 py-0.5 rounded-md ${t.priority === 'Urgent' ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700'}">${t.priority}</span>
             <h5 class="text-xs font-bold text-slate-900 dark:text-white mt-1">${t.title}</h5>
-            <p class="text-[11px] text-slate-400 mt-0.5">${t.assignedToName ? `👤 Dikerjakan: ${t.assignedToName}` : '🟢 Tersedia'}</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">${t.assignedToName ? `Dikerjakan: ${t.assignedToName}` : '<i data-lucide="circle" class="w-3 h-3 inline text-emerald-500 fill-emerald-500"></i> Tersedia'}</p>
           </div>
           <button type="button" onclick="switchTab('admin-tickets')" class="text-xs text-indigo-600 hover:underline flex-shrink-0 font-bold">Detail</button>
         </div>
@@ -1488,7 +1492,7 @@ function renderAdminPeriodTasks() {
   tableBody.innerHTML = filtered.map((e, idx) => {
     const rawIndex = allEntries.indexOf(e);
     const photoCell = e.image 
-      ? `<button type="button" onclick="openImageModal('${e.image}', '${e.taskName}')" class="px-2.5 py-1 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-200">🔍 Lihat</button>`
+      ? `<button type="button" onclick="openImageModal('${e.image}', '${e.taskName}')" class="px-2.5 py-1 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-200">Lihat</button>`
       : '<span class="text-slate-400">-</span>';
 
     return `
@@ -1509,13 +1513,14 @@ function renderAdminPeriodTasks() {
         <td class="p-3 text-center whitespace-nowrap">${photoCell}</td>
         <td class="p-3 text-center whitespace-nowrap">
           <div class="flex items-center justify-center gap-1.5">
-            <button onclick="editEntry(${rawIndex})" class="px-2.5 py-1 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-200" title="Edit Catatan">✏️</button>
-            <button onclick="deleteEntry(${rawIndex})" class="px-2.5 py-1 rounded-xl bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-300 font-bold text-xs hover:bg-red-200" title="Hapus Catatan">🗑️</button>
+            <button onclick="editEntry(${rawIndex})" class="px-2.5 py-1 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-200" title="Edit Catatan"><i data-lucide="pencil" class="w-3 h-3 inline"></i></button>
+            <button onclick="deleteEntry(${rawIndex})" class="px-2.5 py-1 rounded-xl bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-300 font-bold text-xs hover:bg-red-200" title="Hapus Catatan"><i data-lucide="trash-2" class="w-3 h-3 inline"></i></button>
           </div>
         </td>
       </tr>
     `;
-  }).join('');
+  }}).join('');
+  refreshIcons();
 }
 window.renderAdminPeriodTasks = renderAdminPeriodTasks;
 
@@ -1768,13 +1773,13 @@ function renderAdminPeriodAttendance() {
     const rawIndex = allEntries.indexOf(e);
     let statusBadge = '';
     if (e.status === 'Hadir' || e.status === 'Bantuan Perkuliahan' || e.status === 'Hadir Situasional') {
-      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">✅ Hadir</span>';
+      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200"><i data-lucide="check-circle" class="w-3 h-3 inline text-emerald-600"></i> Hadir</span>';
     } else if (e.status === 'Izin') {
-      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">📄 Izin</span>';
+      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">Izin</span>';
     } else if (e.status === 'Sakit') {
-      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200">🏥 Sakit</span>';
+      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200">Sakit</span>';
     } else {
-      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-200 text-slate-800 border border-slate-300">🎌 Libur</span>';
+      statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-200 text-slate-800 border border-slate-300"><i data-lucide="flag" class="w-3 h-3 inline"></i> Libur</span>';
     }
 
     let timeDisplay = '-';
@@ -1786,7 +1791,7 @@ function renderAdminPeriodAttendance() {
     }
 
     const photoCell = e.image 
-      ? `<button type="button" onclick="openImageModal('${e.image}', 'Presensi ${e.date}')" class="px-2.5 py-1 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-200">🔍 Foto</button>`
+      ? `<button type="button" onclick="openImageModal('${e.image}', 'Presensi ${e.date}')" class="px-2.5 py-1 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-200">Foto</button>`
       : '<span class="text-slate-400">-</span>';
 
     return `
@@ -1804,13 +1809,14 @@ function renderAdminPeriodAttendance() {
         <td class="p-3 text-center whitespace-nowrap">${photoCell}</td>
         <td class="p-3 text-center whitespace-nowrap">
           <div class="flex items-center justify-center gap-1.5">
-            <button onclick="editAttendance(${rawIndex})" class="px-2 py-1 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-200" title="Edit Presensi">✏️</button>
-            <button onclick="deleteAttendance(${rawIndex})" class="px-2 py-1 rounded-xl bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-300 font-bold text-xs hover:bg-red-200" title="Hapus Presensi">🗑️</button>
+            <button onclick="editAttendance(${rawIndex})" class="px-2 py-1 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-200" title="Edit Presensi"><i data-lucide="pencil" class="w-3 h-3 inline"></i></button>
+            <button onclick="deleteAttendance(${rawIndex})" class="px-2 py-1 rounded-xl bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-300 font-bold text-xs hover:bg-red-200" title="Hapus Presensi"><i data-lucide="trash-2" class="w-3 h-3 inline"></i></button>
           </div>
         </td>
       </tr>
     `;
-  }).join('');
+  }}).join('');
+  refreshIcons();
 }
 window.renderAdminPeriodAttendance = renderAdminPeriodAttendance;
 
@@ -2003,12 +2009,12 @@ function renderAdminUsers() {
     const attCount = allAtt.filter(a => a.userEmail === u.email).length;
 
     const roleBadge = isMainAdmin 
-      ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">👑 Admin</span>'
-      : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-300">👨‍🎓 Siswa</span>';
+      ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300"><i data-lucide="crown" class="w-3 h-3 inline text-amber-400"></i> Admin</span>'
+      : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-300"><i data-lucide="graduation-cap" class="w-3 h-3 inline"></i> Siswa</span>';
 
     const deleteBtn = isMainAdmin
       ? `<span class="text-[11px] text-slate-400 font-semibold" title="Akun admin utama tidak dapat dihapus">Utama</span>`
-      : `<button type="button" onclick="deleteAdminUser(${idx})" class="px-2.5 py-1.5 rounded-xl bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-300 font-bold text-xs hover:bg-red-200">🗑️ Hapus</button>`;
+      : `<button type="button" onclick="deleteAdminUser(${idx})" class="px-2.5 py-1.5 rounded-xl bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-300 font-bold text-xs hover:bg-red-200"><i data-lucide="trash-2" class="w-3 h-3 inline"></i> Hapus</button>`;
 
     return `
       <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
@@ -2023,13 +2029,14 @@ function renderAdminUsers() {
         <td class="p-3 text-center"><span class="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300">${attCount}</span></td>
         <td class="p-3 text-center whitespace-nowrap">
           <div class="flex items-center justify-center gap-1.5">
-            <button type="button" onclick="openEditUserModal(${idx})" class="px-2.5 py-1.5 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-200">✏️ Edit</button>
+            <button type="button" onclick="openEditUserModal(${idx})" class="px-2.5 py-1.5 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold text-xs hover:bg-blue-200"><i data-lucide="pencil" class="w-3 h-3 inline"></i> Edit</button>
             ${deleteBtn}
           </div>
         </td>
       </tr>
     `;
-  }).join('');
+  }}).join('');
+  refreshIcons();
 }
 window.renderAdminUsers = renderAdminUsers;
 
@@ -2042,7 +2049,7 @@ function openAddUserModal() {
   const emailInput = document.getElementById('admin-user-email');
   const passInput = document.getElementById('admin-user-password');
 
-  if (title) title.innerHTML = '<span>➕</span><span>Tambah Akun Siswa Baru</span>';
+  if (title) title.innerHTML = '<span><i data-lucide="plus" class="w-3 h-3 inline"></i></span><span>Tambah Akun Siswa Baru</span>';
   if (editIdxInput) editIdxInput.value = '';
   if (nisInput) nisInput.value = '';
   if (nameInput) nameInput.value = '';
@@ -2066,7 +2073,7 @@ function openEditUserModal(index) {
   const emailInput = document.getElementById('admin-user-email');
   const passInput = document.getElementById('admin-user-password');
 
-  if (title) title.innerHTML = '<span>✏️</span><span>Edit Akun Siswa</span>';
+  if (title) title.innerHTML = '<span><i data-lucide="pencil" class="w-3 h-3 inline"></i></span><span>Edit Akun Siswa</span>';
   if (editIdxInput) editIdxInput.value = String(index);
   if (nisInput) nisInput.value = u.nis || '';
   if (nameInput) nameInput.value = u.name || '';
@@ -2204,7 +2211,7 @@ function renderEntries() {
 
   if (!entries.length) {
     entriesList.innerHTML = `<div class="rounded-2xl bg-slate-100 dark:bg-slate-800/50 p-8 text-center text-slate-500 dark:text-slate-400">
-      <p class="text-3xl mb-2">📭</p>
+      <p class="text-3xl mb-2"><i data-lucide="inbox" class="w-8 h-8 inline text-slate-400"></i></p>
       <p class="text-base font-bold text-slate-700 dark:text-slate-300">Belum ada catatan pekerjaan</p>
       <p class="text-xs mt-1">Mulai tambahkan catatan pekerjaan Anda di menu Tambah Catatan</p>
     </div>`;
@@ -2216,13 +2223,13 @@ function renderEntries() {
     const imagePreview = entry.image
       ? `<div class="mt-3">
           <img src="${entry.image}" alt="Preview" class="w-full max-h-48 object-cover rounded-2xl cursor-pointer hover:opacity-90 transition shadow-sm" onclick="openImageModal('${entry.image}', '${entry.taskName}')" />
-          <p class="text-[11px] text-slate-400 mt-1">🔍 Klik gambar untuk memperbesar</p>
+          <p class="text-[11px] text-slate-400 mt-1">Klik untuk memperbesar</p>
         </div>`
       : '';
 
     const studentBadge = isAdmin && entry.userName
       ? `<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800 mb-2">
-          <span>👤</span><span>${entry.userName}</span><span class="text-[10px] opacity-75">(${entry.userNis || '-'})</span>
+          <i data-lucide="user" class="w-3 h-3 inline"></i><span>${entry.userName}</span><span class="text-[10px] opacity-75">(${entry.userNis || '-'})</span>
         </div>`
       : '';
 
@@ -2232,23 +2239,24 @@ function renderEntries() {
         <div class="flex items-start justify-between gap-3">
           <div class="flex-1">
             <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">${entry.taskName}</h3>
-            <p class="mt-1 text-xs sm:text-sm text-slate-500 dark:text-slate-400">📅 ${formatDate(entry.date)} • 🕐 ${formatTime(entry.time)}</p>
+            <p class="mt-1 text-xs sm:text-sm text-slate-500 dark:text-slate-400"><i data-lucide="calendar" class="w-3 h-3 inline"></i> ${formatDate(entry.date)} • ${formatTime(entry.time)}</p>
           </div>
           <div class="flex gap-2 flex-shrink-0">
-            <button onclick="editEntry(${rawIndex})" class="rounded-xl bg-blue-100 dark:bg-blue-900/60 px-3 py-1.5 text-xs font-bold text-blue-700 dark:text-blue-300 hover:bg-blue-200 transition">✏️ Edit</button>
-            <button onclick="deleteEntry(${rawIndex})" class="rounded-xl bg-red-100 dark:bg-red-900/60 px-3 py-1.5 text-xs font-bold text-red-700 dark:text-red-300 hover:bg-red-200 transition">🗑️ Hapus</button>
+            <button onclick="editEntry(${rawIndex})" class="rounded-xl bg-blue-100 dark:bg-blue-900/60 px-3 py-1.5 text-xs font-bold text-blue-700 dark:text-blue-300 hover:bg-blue-200 transition"><i data-lucide="pencil" class="w-3 h-3 inline"></i> Edit</button>
+            <button onclick="deleteEntry(${rawIndex})" class="rounded-xl bg-red-100 dark:bg-red-900/60 px-3 py-1.5 text-xs font-bold text-red-700 dark:text-red-300 hover:bg-red-200 transition"><i data-lucide="trash-2" class="w-3 h-3 inline"></i> Hapus</button>
           </div>
         </div>
         <div class="mt-3.5 grid gap-2 text-xs sm:text-sm">
-          <p><span class="font-bold text-slate-700 dark:text-slate-300">📍 Lokasi:</span> <span class="text-slate-600 dark:text-slate-400">${entry.location}</span></p>
-          <p><span class="font-bold text-slate-700 dark:text-slate-300">👤 Pembimbing / Pemohon:</span> <span class="text-slate-600 dark:text-slate-400">${entry.requester}</span></p>
-          <p class="font-bold text-slate-700 dark:text-slate-300">✅ Hasil Kerja:</p>
+          <p><span class="font-bold text-slate-700 dark:text-slate-300">Lokasi:</span> <span class="text-slate-600 dark:text-slate-400">${entry.location}</span></p>
+          <p><span class="font-bold text-slate-700 dark:text-slate-300">Pembimbing / Pemohon:</span> <span class="text-slate-600 dark:text-slate-400">${entry.requester}</span></p>
+          <p class="font-bold text-slate-700 dark:text-slate-300"><i data-lucide="check-circle" class="w-3 h-3 inline text-emerald-600"></i> Hasil Kerja:</p>
           <p class="text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 whitespace-pre-wrap leading-relaxed border border-slate-100 dark:border-slate-750">${entry.proof}</p>
         </div>
         ${imagePreview}
       </div>
     `;
-  }).join('');
+  }}).join('');
+  refreshIcons();
 }
 
 window.editEntry = function(index) {
@@ -2263,7 +2271,7 @@ window.editEntry = function(index) {
   taskRequester.value = entry.requester;
   taskProof.value = entry.proof;
 
-  addTaskButton.textContent = '💾 Perbarui Catatan';
+  addTaskButton.textContent = 'Perbarui Catatan';
   addTaskButton.dataset.editIndex = index;
 
   switchTab('add-task');
@@ -2301,7 +2309,7 @@ function clearTaskForm() {
   taskRequester.value = '';
   taskProof.value = '';
   taskImage.value = '';
-  addTaskButton.textContent = '➕ Tambah Catatan';
+  addTaskButton.textContent = '<i data-lucide="plus" class="w-3 h-3 inline"></i> Tambah Catatan';
   delete addTaskButton.dataset.editIndex;
 }
 
@@ -2520,20 +2528,20 @@ function renderAttendanceRecap() {
     // Status Badge
     let statusBadge = '';
     if (att.status === 'Hadir' || att.status === 'Bantuan Perkuliahan' || att.status === 'Hadir Situasional') {
-      statusBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">✅ Hadir</span>';
+      statusBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"><i data-lucide="check-circle" class="w-3 h-3 inline text-emerald-600"></i> Hadir</span>';
     } else if (att.status === 'Izin') {
-      statusBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">📄 Izin</span>';
+      statusBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">Izin</span>';
     } else if (att.status === 'Sakit') {
-      statusBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">🏥 Sakit</span>';
+      statusBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">Sakit</span>';
     } else {
-      statusBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700">🎌 Libur</span>';
+      statusBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700"><i data-lucide="flag" class="w-3 h-3 inline"></i> Libur</span>';
     }
 
     // Time Column
     let timeText = '';
     if (att.status === 'Bantuan Perkuliahan') {
       timeText = `<div class="font-mono text-[11px] leading-tight">
-        <span class="text-indigo-600 dark:text-indigo-400 font-bold">07:00 (Kuliah)</span> ➔ 
+        <span class="text-indigo-600 dark:text-indigo-400 font-bold">07:00 (Kuliah)</span> → 
         <span class="text-slate-700 dark:text-slate-300">08:00 (IT)</span> s/d 
         <span class="text-slate-500">${att.checkOutTime || '16:00'}</span>
       </div>`;
@@ -2581,13 +2589,14 @@ function renderAttendanceRecap() {
         <td class="p-3 text-center">${imageCell}</td>
         <td class="p-3 text-center whitespace-nowrap">
           <div class="flex items-center justify-center gap-1.5">
-            <button onclick="editAttendance(${rawIndex})" class="p-1.5 rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 hover:bg-blue-200 transition text-xs font-bold" title="Edit Absensi">✏️</button>
-            <button onclick="deleteAttendance(${rawIndex})" class="p-1.5 rounded-lg bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-300 hover:bg-red-200 transition text-xs font-bold" title="Hapus Absensi">🗑️</button>
+            <button onclick="editAttendance(${rawIndex})" class="p-1.5 rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 hover:bg-blue-200 transition text-xs font-bold" title="Edit Absensi"><i data-lucide="pencil" class="w-3 h-3 inline"></i></button>
+            <button onclick="deleteAttendance(${rawIndex})" class="p-1.5 rounded-lg bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-300 hover:bg-red-200 transition text-xs font-bold" title="Hapus Absensi"><i data-lucide="trash-2" class="w-3 h-3 inline"></i></button>
           </div>
         </td>
       </tr>
     `;
-  }).join('');
+  }}).join('');
+  refreshIcons();
 }
 
 window.editAttendance = function(index) {
@@ -2702,7 +2711,7 @@ function exportAttendanceExcelHandler() {
       let timeIn = att.checkInTime || '-';
       let timeOut = att.checkOutTime || '-';
       if (att.status === 'Bantuan Perkuliahan') {
-        timeIn = `07:00 (Kuliah) ➔ ${att.itTime || '08:00'} (IT)`;
+        timeIn = `07:00 (Kuliah) → ${att.itTime || '08:00'} (IT)`;
       } else if (att.status === 'Hadir Situasional') {
         timeIn = `Tiba IT ${att.checkInTime || '09:30'}`;
       }
@@ -2849,7 +2858,7 @@ function exportAttendancePdfHandler() {
             ${entries.map((att, i) => {
               let waktuStr = `${att.checkInTime || '08:00'} s/d ${att.checkOutTime || '16:00'}`;
               if (att.status === 'Bantuan Perkuliahan') {
-                waktuStr = `07:00 (Kuliah) ➔ 08:00 (IT) s/d ${att.checkOutTime || '16:00'}`;
+                waktuStr = `07:00 (Kuliah) → 08:00 (IT) s/d ${att.checkOutTime || '16:00'}`;
               } else if (att.status === 'Hadir Situasional') {
                 waktuStr = `Tiba IT ${att.checkInTime || '09:30'} s/d ${att.checkOutTime || '16:00'}`;
               }
@@ -2947,19 +2956,19 @@ signupButton.addEventListener('click', () => {
   const password = document.getElementById('signup-password').value;
 
   if (!nis || !name || !email || !password) {
-    authMessage.textContent = '❌ Semua kolom harus diisi lengkap';
+    authMessage.textContent = '<i data-lucide="x-circle" class="w-3 h-3 inline text-red-500"></i> Semua kolom harus diisi lengkap';
     authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-rose-500';
     return;
   }
 
   if (!validateEmail(email)) {
-    authMessage.textContent = '❌ Format email tidak valid';
+    authMessage.textContent = '<i data-lucide="x-circle" class="w-3 h-3 inline text-red-500"></i> Format email tidak valid';
     authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-rose-500';
     return;
   }
 
   if (password.length < 6) {
-    authMessage.textContent = '❌ Password minimal 6 karakter';
+    authMessage.textContent = '<i data-lucide="x-circle" class="w-3 h-3 inline text-red-500"></i> Password minimal 6 karakter';
     authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-rose-500';
     return;
   }
@@ -2968,7 +2977,7 @@ signupButton.addEventListener('click', () => {
   saveUserToList(newUser);
   setStoredUser(newUser);
   setSession(email);
-  authMessage.textContent = '✅ Pendaftaran berhasil! Membuka dashboard...';
+  authMessage.textContent = '<i data-lucide="check-circle" class="w-3 h-3 inline text-emerald-600"></i> Pendaftaran berhasil! Membuka dashboard...';
   authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-emerald-600';
   setTimeout(openApp, 600);
 });
@@ -2981,14 +2990,14 @@ loginButton.addEventListener('click', () => {
   const user = allUsers.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
 
   if (!user) {
-    authMessage.textContent = '❌ Email atau password salah';
+    authMessage.textContent = '<i data-lucide="x-circle" class="w-3 h-3 inline text-red-500"></i> Email atau password salah';
     authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-rose-500';
     return;
   }
 
   setStoredUser(user);
   setSession(user.email);
-  authMessage.textContent = '✅ Berhasil masuk!';
+  authMessage.textContent = '<i data-lucide="check-circle" class="w-3 h-3 inline text-emerald-600"></i> Berhasil masuk!';
   authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-emerald-600';
   setTimeout(openApp, 400);
 });
@@ -3001,7 +3010,7 @@ logoutButton.addEventListener('click', () => {
   setActiveTab('login');
   document.getElementById('login-email').value = '';
   document.getElementById('login-password').value = '';
-  showToast('Anda berhasil logout 👋', 'info');
+  showToast('Anda berhasil logout ', 'info');
 });
 
 // Save profile
@@ -3669,6 +3678,11 @@ const btnExportPeriodAttPdf = document.getElementById('btn-export-period-att-pdf
 if (btnExportPeriodAttPdf) btnExportPeriodAttPdf.addEventListener('click', exportPeriodAttendancePdf);
 
 // ==================== INITIALIZATION ====================
+
+// Helper: refresh lucide icons setelah dynamic render
+function refreshIcons() {
+  if (window.lucide) setTimeout(() => lucide.createIcons(), 30);
+}
 function initializeApp() {
   initTheme();
   requestNotificationPermission();
@@ -3704,5 +3718,9 @@ function initializeApp() {
 }
 
 initializeApp();
+
+
+
+
 
 
