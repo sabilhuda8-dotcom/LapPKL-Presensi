@@ -1,5 +1,6 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC19Uf4tzz2pHSNInZ7JaOgQRKx44shY3Q",
@@ -11,9 +12,7 @@ const firebaseConfig = {
   measurementId: "G-ESW7RJG2XF"
 };
 
-// Inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
-
-// Ekspor agar bisa digunakan di file lain
+export const auth = getAuth(app);
 export default app;

@@ -12,6 +12,17 @@ import {
   serverTimestamp,
 } from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js';
 
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js';
+
+import { db } from './firebase.js';
+const auth = getAuth();
+
 // ==================== DAFTAR TANGGAL MERAH NASIONAL INDONESIA ====================
 const INDONESIA_HOLIDAYS = {
   // 2025
@@ -98,8 +109,8 @@ const welcomeText = document.getElementById('welcome-text');
 const userRoleBadge = document.getElementById('user-role-badge');
 const userRoleSubtext = document.getElementById('user-role-subtext');
 const signupRole = document.getElementById('signup-role');
-const btnQuickLoginStudent = document.getElementById('btn-quick-login-student');
-const btnQuickLoginAdmin = document.getElementById('btn-quick-login-admin');
+
+
 
 // Navigation group elements (Separation of Admin vs Student)
 const adminNavGroup = document.getElementById('admin-nav-group');
@@ -2924,31 +2935,11 @@ function getDateByOffset(offsetDays) {
   return getLocalDateString(d);
 }
 
-// Quick Demo Login Buttons
-if (btnQuickLoginStudent) {
-  btnQuickLoginStudent.addEventListener('click', () => {
-    const emailInput = document.getElementById('login-email');
-    const passInput = document.getElementById('login-password');
-    if (emailInput) emailInput.value = 'sabil@gmail.com';
-    if (passInput) passInput.value = '123';
-    setActiveTab('login');
-    loginButton.click();
-  });
-}
 
-if (btnQuickLoginAdmin) {
-  btnQuickLoginAdmin.addEventListener('click', () => {
-    const emailInput = document.getElementById('login-email');
-    const passInput = document.getElementById('login-password');
-    if (emailInput) emailInput.value = 'admin@pkl.local';
-    if (passInput) passInput.value = 'admin';
-    setActiveTab('login');
-    loginButton.click();
-  });
-}
 
-// Signup logic
-signupButton.addEventListener('click', () => {
+
+// ==================== FIREBASE AUTH: SIGNUP ====================
+signupButton.addEventListener('click', async () => {
   const role = signupRole ? signupRole.value : 'user';
   const nis = document.getElementById('signup-nis').value.trim();
   const name = document.getElementById('signup-name').value.trim();
@@ -2956,61 +2947,113 @@ signupButton.addEventListener('click', () => {
   const password = document.getElementById('signup-password').value;
 
   if (!nis || !name || !email || !password) {
-    authMessage.textContent = '<i data-lucide="x-circle" class="w-3 h-3 inline text-red-500"></i> Semua kolom harus diisi lengkap';
+    authMessage.textContent = 'Semua kolom harus diisi lengkap';
     authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-rose-500';
     return;
   }
-
   if (!validateEmail(email)) {
-    authMessage.textContent = '<i data-lucide="x-circle" class="w-3 h-3 inline text-red-500"></i> Format email tidak valid';
+    authMessage.textContent = 'Format email tidak valid';
     authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-rose-500';
     return;
   }
-
   if (password.length < 6) {
-    authMessage.textContent = '<i data-lucide="x-circle" class="w-3 h-3 inline text-red-500"></i> Password minimal 6 karakter';
+    authMessage.textContent = 'Password minimal 6 karakter';
     authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-rose-500';
     return;
   }
 
-  const newUser = { nis, name, email, password, role };
-  saveUserToList(newUser);
-  setStoredUser(newUser);
-  setSession(email);
-  authMessage.textContent = '<i data-lucide="check-circle" class="w-3 h-3 inline text-emerald-600"></i> Pendaftaran berhasil! Membuka dashboard...';
-  authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-emerald-600';
-  setTimeout(openApp, 600);
+  try {
+    authMessage.textContent = 'Mendaftarkan akun...';
+    authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-slate-500';
+
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const uid = userCredential.user.uid;
+
+    // Simpan profil ke Firestore
+    const { setDoc, doc: fsDoc } = await import('https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js');
+    await setDoc(fsDoc(db, 'users', uid), { nis, name, email, role, uid, createdAt: new Date().toISOString() });
+
+    const newUser = { nis, name, email, role, uid };
+    saveUserToList(newUser);
+    setStoredUser(newUser);
+    setSession(email);
+
+    authMessage.textContent = 'Pendaftaran berhasil! Membuka dashboard...';
+    authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-emerald-600';
+    setTimeout(openApp, 600);
+  } catch (err) {
+    let msg = 'Pendaftaran gagal. Coba lagi.';
+    if (err.code === 'auth/email-already-in-use') msg = 'Email sudah terdaftar. Silakan masuk.';
+    if (err.code === 'auth/invalid-email') msg = 'Format email tidak valid.';
+    authMessage.textContent = msg;
+    authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-rose-500';
+  }
 });
 
-// Login logic
-loginButton.addEventListener('click', () => {
+// ==================== FIREBASE AUTH: LOGIN ====================
+loginButton.addEventListener('click', async () => {
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
-  const allUsers = getAllUsers();
-  const user = allUsers.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
 
-  if (!user) {
-    authMessage.textContent = '<i data-lucide="x-circle" class="w-3 h-3 inline text-red-500"></i> Email atau password salah';
+  if (!email || !password) {
+    authMessage.textContent = 'Email dan password harus diisi';
     authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-rose-500';
     return;
   }
 
-  setStoredUser(user);
-  setSession(user.email);
-  authMessage.textContent = '<i data-lucide="check-circle" class="w-3 h-3 inline text-emerald-600"></i> Berhasil masuk!';
-  authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-emerald-600';
-  setTimeout(openApp, 400);
+  try {
+    authMessage.textContent = 'Memeriksa akun...';
+    authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-slate-500';
+
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const uid = userCredential.user.uid;
+
+    // Ambil profil dari Firestore
+    let user = null;
+    try {
+      const { getDoc, doc: fsDoc } = await import('https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js');
+      const snap = await getDoc(fsDoc(db, 'users', uid));
+      if (snap.exists()) user = { ...snap.data(), uid };
+    } catch (_) {}
+
+    // Fallback ke localStorage jika Firestore belum ada datanya
+    if (!user) {
+      const allUsers = getAllUsers();
+      user = allUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+    }
+
+    if (!user) {
+      user = { name: email, email, role: 'user', uid };
+    }
+
+    setStoredUser(user);
+    setSession(email);
+    authMessage.textContent = 'Berhasil masuk!';
+    authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-emerald-600';
+    setTimeout(openApp, 400);
+  } catch (err) {
+    let msg = 'Email atau password salah';
+    if (err.code === 'auth/user-not-found') msg = 'Akun tidak ditemukan. Silakan daftar terlebih dahulu.';
+    if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') msg = 'Password salah.';
+    if (err.code === 'auth/too-many-requests') msg = 'Terlalu banyak percobaan. Coba lagi nanti.';
+    authMessage.textContent = msg;
+    authMessage.className = 'mt-4 min-h-[1.25rem] text-sm text-center font-semibold text-rose-500';
+  }
 });
 
-// Logout logic
-logoutButton.addEventListener('click', () => {
+// ==================== FIREBASE AUTH: LOGOUT ====================
+logoutButton.addEventListener('click', async () => {
+  if (!confirm('Yakin ingin logout?')) return;
+  try {
+    await signOut(auth);
+  } catch (_) {}
   clearSession();
   appScreen.classList.add('hidden');
   authScreen.classList.remove('hidden');
   setActiveTab('login');
   document.getElementById('login-email').value = '';
   document.getElementById('login-password').value = '';
-  showToast('Anda berhasil logout ', 'info');
+  showToast('Anda berhasil logout', 'info');
 });
 
 // Save profile

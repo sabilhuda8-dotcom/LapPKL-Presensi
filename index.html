@@ -30,7 +30,8 @@
     {
       "imports": {
         "firebase/app": "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js",
-        "firebase/firestore": "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js"
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js"
       }
     }
   </script>
@@ -150,20 +151,7 @@
             </div>
             <button id="login-button" class="mt-2 rounded-2xl bg-blue-600 hover:bg-blue-700 px-6 py-3.5 text-white font-semibold shadow-lg shadow-blue-500/20 transition hover:scale-[1.01] active:scale-[0.99]">Masuk ke Dashboard</button>
 
-            <!-- QUICK DEMO LOGINS -->
-            <div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2">
-              <p class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-center">Akses Cepat Akun Demo</p>
-              <div class="grid grid-cols-2 gap-2">
-                <button type="button" id="btn-quick-login-student" class="py-2 px-2.5 rounded-xl text-xs font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition text-center flex items-center justify-center gap-1">
-                  <span><i data-lucide="graduation-cap" class="w-4 h-4"></i></span>
-                  <span>Siswa (Sabil)</span>
-                </button>
-                <button type="button" id="btn-quick-login-admin" class="py-2 px-2.5 rounded-xl text-xs font-semibold bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition text-center flex items-center justify-center gap-1">
-                  <span><i data-lucide="crown" class="w-4 h-4"></i></span>
-                  <span>Admin / Pembimbing</span>
-                </button>
-              </div>
-            </div>
+
           </div>
 
           <!-- SIGNUP FORM -->
@@ -1438,9 +1426,18 @@
       const attCheckinEl = document.getElementById('attendance-checkin');
       if (attDateEl) attDateEl.value = today;
       if (attCheckinEl) attCheckinEl.value = currentTime;
+
+      // Init lucide icons - retry sampai library siap
+      function initLucide() {
+        if (window.lucide) {
+          lucide.createIcons();
+        } else {
+          setTimeout(initLucide, 100);
+        }
+      }
+      initLucide();
     });
   </script>
-  <script>document.addEventListener('DOMContentLoaded', function(){ if(window.lucide) lucide.createIcons(); });</script>
 </body>
 </html>
 
