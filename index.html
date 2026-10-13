@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
@@ -104,7 +104,7 @@
               Laporan Kegiatan & <br class="hidden sm:inline" />Absensi Kehadiran
             </h1>
             <p class="mt-4 text-blue-100 text-sm md:text-base leading-relaxed max-w-md">
-              Platform lengkap untuk mencatat absensi harian, jurnal kegiatan praktik, upload bukti dokumentasi, dan export laporan instan.
+              Catat absensi, jurnal kegiatan, dan export laporan PKL.
             </p>
           </div>
 
@@ -337,7 +337,7 @@
                 <span>👤</span>
                 <span>Pengaturan Profil User</span>
               </h2>
-              <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Kelola data profil siswa/mahasiswa praktik Anda.</p>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mb-6"></p>
               
               <div class="grid gap-4">
                 <div>
@@ -364,7 +364,7 @@
                 <span>🆔</span>
                 <span>Identitas Praktik</span>
               </h2>
-              <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Identitas ini akan dicantumkan secara otomatis pada setiap lembar laporan dan rekapitulasi.</p>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mb-6"></p>
               
               <div class="grid gap-4 bg-gradient-to-br from-blue-50 via-indigo-50/50 to-slate-50 dark:from-slate-850 dark:via-slate-800 dark:to-slate-850 p-6 sm:p-8 rounded-3xl border border-blue-200/80 dark:border-slate-700">
                 <div class="flex items-center gap-4 p-3 bg-white/70 dark:bg-slate-800/80 backdrop-blur rounded-2xl border border-slate-200/60 dark:border-slate-700">
@@ -399,7 +399,7 @@
                 <span>➕</span>
                 <span>Tambah Catatan Pekerjaan Harian</span>
               </h2>
-              <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Tuliskan pekerjaan harian yang telah Anda selesaikan.</p>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mb-6"></p>
 
               <div class="grid gap-4">
                 <div>
@@ -410,7 +410,7 @@
                   <div>
                     <div class="flex items-center justify-between mb-1.5">
                       <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Tanggal Pekerjaan</label>
-                      <span class="text-[11px] text-slate-400">Bisa isi tanggal lalu</span>
+                      
                     </div>
                     <input type="date" id="task-date" class="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 transition" />
                     <!-- Quick Past Date Shortcuts -->
@@ -462,7 +462,7 @@
                     <span>📝</span>
                     <span>Daftar Catatan Pekerjaan</span>
                   </h2>
-                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Kelola dan unduh seluruh riwayat pekerjaan harian.</p>
+                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1"></p>
                 </div>
                 <div class="flex flex-wrap gap-2">
                   <button id="export-excel" class="rounded-2xl bg-emerald-600 hover:bg-emerald-700 px-3.5 py-2 text-xs sm:text-sm text-white font-semibold transition shadow flex items-center gap-1.5">
@@ -514,7 +514,7 @@
                     <span>🎫</span>
                     <span>Sistem Tiket Tugas PKL</span>
                   </h2>
-                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Pilih tugas yang tersedia dari pembimbing, kerjakan, dan selesaikan untuk otomatis masuk ke jurnal harian.</p>
+                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1"></p>
                 </div>
                 <div class="flex items-center gap-2">
                   <span class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 flex items-center gap-1.5">
@@ -548,7 +548,7 @@
                     <span>🕒</span>
                     <span>Form Absensi Kehadiran PKL</span>
                   </h2>
-                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Catat kehadiran harian, bantuan perkuliahan pagi, atau izin multi-hari.</p>
+                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1"></p>
                 </div>
                 <div class="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-2xl text-xs sm:text-sm font-semibold border border-blue-200/80 dark:border-blue-900/60 shadow-sm">
                   <span>📅</span>
@@ -558,23 +558,7 @@
                 </div>
               </div>
 
-              <!-- BANNER JADWAL RESMI PKL -->
-              <div class="mb-6 p-4 rounded-2xl bg-gradient-to-r from-blue-50 via-indigo-50 to-slate-50 dark:from-slate-800/80 dark:via-slate-850 dark:to-slate-800 border border-blue-200/80 dark:border-slate-700">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div class="flex items-start gap-3">
-                    <span class="text-2xl p-2 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-300 flex-shrink-0">📌</span>
-                    <div>
-                      <h4 class="text-sm font-bold text-slate-900 dark:text-white">Jadwal Praktik Kerja Lapangan (PKL)</h4>
-                      <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
-                        Hari <strong>Senin s/d Jumat</strong> dari <strong>Jam 08:00 pagi – 16:00 sore</strong> (fleksibel jika ada kegiatan / lembur).<br>
-                        Sabtu & Minggu serta <strong>Tanggal Merah Nasional Libur</strong>.<br>
-                        <span class="text-violet-700 dark:text-violet-300 font-semibold">💡 Toleransi Kehadiran Situasional:</span> Diberikan fleksibilitas jika anak PKL diminta hadir ke sekolah terlebih dahulu (bimbingan guru, urusan administrasi/rapor) atau penugasan khusus, dengan mencantumkan keterangan yang jelas.
-                      </p>
-                    </div>
-                  </div>
-                  <div id="holiday-info-badge" class="hidden sm:flex flex-shrink-0 items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border"></div>
-                </div>
-              </div>
+              
 
               <!-- Pilihan Status Kehadiran (6 Status) -->
               <!-- Pilihan Status Kehadiran (Sederhana & Praktis) -->
@@ -587,25 +571,25 @@
                   <button type="button" data-status="Hadir" class="attendance-status-btn flex flex-col items-center justify-center p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 font-bold transition shadow-sm hover:scale-[1.02]">
                     <span class="text-2xl mb-1">✅</span>
                     <span class="text-sm">Hadir</span>
-                    <span class="text-[10px] font-normal opacity-80">Divisi IT / Kuliah / Situasional</span>
+                    
                   </button>
                   <!-- Izin -->
                   <button type="button" data-status="Izin" class="attendance-status-btn flex flex-col items-center justify-center p-3.5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 font-bold transition hover:scale-[1.02]">
                     <span class="text-2xl mb-1">📄</span>
                     <span class="text-sm">Izin</span>
-                    <span class="text-[10px] font-normal opacity-80">Ujian TKA / Kepentingan Sekolah</span>
+                    
                   </button>
                   <!-- Sakit -->
                   <button type="button" data-status="Sakit" class="attendance-status-btn flex flex-col items-center justify-center p-3.5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 font-bold transition hover:scale-[1.02]">
                     <span class="text-2xl mb-1">🏥</span>
                     <span class="text-sm">Sakit</span>
-                    <span class="text-[10px] font-normal opacity-80">Istirahat / Surat Dokter</span>
+                    
                   </button>
                   <!-- Libur Nasional -->
                   <button type="button" data-status="Libur Nasional" class="attendance-status-btn flex flex-col items-center justify-center p-3.5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 font-bold transition hover:scale-[1.02]">
                     <span class="text-2xl mb-1">🎌</span>
                     <span class="text-sm">Libur Nasional</span>
-                    <span class="text-[10px] font-normal opacity-80">Tanggal Merah / Libur PKL</span>
+                    
                   </button>
                 </div>
                 <input type="hidden" id="attendance-status" value="Hadir" />
@@ -619,7 +603,7 @@
                   <div>
                     <div class="flex items-center justify-between mb-1.5">
                       <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Tanggal Absensi <span class="text-red-500">*</span></label>
-                      <span class="text-[11px] text-slate-400">Bisa isi tanggal lalu</span>
+                      
                     </div>
                     <input type="date" id="attendance-date" class="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 transition" />
                     
@@ -705,7 +689,7 @@
                       <button type="button" id="btn-now-checkin" class="text-xs text-blue-600 dark:text-blue-400 hover:underline font-bold">⏰ Jam Sekarang</button>
                     </div>
                     <input type="time" id="attendance-checkin" value="08:00" class="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 transition font-mono" />
-                    <p class="text-[11px] text-slate-400 mt-1">Jadwal standar masuk PKL: 08:00 WIB</p>
+                    
                   </div>
                   <div>
                     <div class="flex items-center justify-between mb-1.5">
@@ -713,7 +697,7 @@
                       <button type="button" id="btn-now-checkout" class="text-xs text-blue-600 dark:text-blue-400 hover:underline font-bold">⏰ Jam Sekarang</button>
                     </div>
                     <input type="time" id="attendance-checkout" value="16:00" class="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 transition font-mono" />
-                    <p class="text-[11px] text-slate-400 mt-1">Jadwal standar pulang PKL: 16:00 WIB (fleksibel jika lembur)</p>
+                    
                   </div>
                 </div>
 
@@ -780,7 +764,7 @@
                     <span>📊</span>
                     <span>Rekapitulasi Presensi Bulanan PKL</span>
                   </h2>
-                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Rekap sederhana per bulan untuk laporan kehadiran praktikan.</p>
+                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1"></p>
                 </div>
 
                 <!-- MONTH NAVIGATOR SIMPEL -->
@@ -1032,7 +1016,7 @@
                     <span>🎫</span>
                     <span>Manajemen Tiket Pekerjaan & Penugasan PKL</span>
                   </h2>
-                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Berikan pekerjaan dalam bentuk tiket tugas yang dapat diambil dan dikerjakan oleh anak PKL.</p>
+                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1"></p>
                 </div>
                 <button type="button" onclick="openCreateTicketModal()" class="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold transition shadow-md flex items-center gap-2 flex-shrink-0">
                   <span>➕</span>
@@ -1064,7 +1048,7 @@
                     <span>📝</span>
                     <span>Rekap Jurnal Catatan Pekerjaan (Per Periode)</span>
                   </h2>
-                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Pantau dan filter seluruh pekerjaan siswa berdasarkan rentang tanggal periode kerja dan siswa.</p>
+                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1"></p>
                 </div>
                 <div class="flex items-center gap-2">
                   <button type="button" id="btn-export-period-tasks-excel" class="px-3.5 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5">
@@ -1142,7 +1126,7 @@
                     <span>🕒</span>
                     <span>Rekap Absensi Kehadiran Siswa (Per Periode)</span>
                   </h2>
-                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Rekapitulasi multi-siswa berdasarkan rentang periode tanggal (Senin–Jumat).</p>
+                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1"></p>
                 </div>
                 <div class="flex items-center gap-2">
                   <button type="button" id="btn-export-period-att-excel" class="px-3.5 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5">
@@ -1459,3 +1443,4 @@
   </script>
 </body>
 </html>
+
