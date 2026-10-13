@@ -1,4 +1,4 @@
-import app, { db } from './firebase.js';
+﻿import app, { db } from './firebase.js';
 import {
   collection,
   addDoc,
@@ -1265,7 +1265,7 @@ function renderAdminTickets() {
           </div>
           <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">${t.title}</h4>
           <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">📅 Target Deadline: <strong>${formatDayDate(t.deadline)}</strong></p>
-          <p class="mt-2.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl border border-slate-100 dark:border-slate-750">${t.description}</p>
+          <p class="mt-2.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl border border-slate-100 dark:border-slate-750">${t.description && t.description.length > 120 ? t.description.slice(0, 120) + "..." : t.description}</p>
           ${assigneeInfo}
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
@@ -1344,7 +1344,7 @@ function renderStudentTickets() {
           </div>
           <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">${t.title}</h4>
           <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">📅 Target: <strong>${formatDayDate(t.deadline)}</strong></p>
-          <p class="mt-2.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl border border-slate-100 dark:border-slate-750">${t.description}</p>
+          <p class="mt-2.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl border border-slate-100 dark:border-slate-750">${t.description && t.description.length > 120 ? t.description.slice(0, 120) + "..." : t.description}</p>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
           <span class="text-[11px] text-slate-400">Oleh: ${t.createdByName || 'Pembimbing'}</span>
@@ -3704,4 +3704,5 @@ function initializeApp() {
 }
 
 initializeApp();
+
 
